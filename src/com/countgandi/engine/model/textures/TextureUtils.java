@@ -30,6 +30,7 @@ public class TextureUtils {
 			if (!path.startsWith("/")) {
 				path = "/" + path;
 			}
+			path = path.replaceAll("\\\\", "/");
 			InputStream in = TextureUtils.class.getResourceAsStream(path);
 			try {
 				img = ImageIO.read(in);
@@ -63,7 +64,8 @@ public class TextureUtils {
 		int texID = GL11.glGenTextures();
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
 		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, data.getWidth(), data.getHeight(), 0, GL12.GL_BGRA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, data.getWidth(), data.getHeight(), 0,
+				GL12.GL_BGRA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
 
 		loadBuilderData(GL11.GL_TEXTURE_2D, builder);
 
@@ -92,14 +94,16 @@ public class TextureUtils {
 
 		GL11.glBindTexture(GL45.GL_TEXTURE_2D_ARRAY, texID);
 		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-		
+
 		// For textureAtlas to Array: GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0,
 		// GL11.GL_RGBA, textureData.getWidth(), textureData.getHeight(), 0,
 		// GL12.GL_BGRA, GL11.GL_UNSIGNED_BYTE, textureData.getBuffer());
-		GL45.glTexStorage3D(GL45.GL_TEXTURE_2D_ARRAY, getMipMapCount(width), GL45.GL_RGBA8, width, height, textureData.getBufferArray().length);
-		
+		GL45.glTexStorage3D(GL45.GL_TEXTURE_2D_ARRAY, getMipMapCount(width), GL45.GL_RGBA8, width, height,
+				textureData.getBufferArray().length);
+
 		for (int i = 0; i < textureData.getBufferArray().length; i++) {
-			GL45.glTexSubImage3D(GL45.GL_TEXTURE_2D_ARRAY, 0, 0, 0, i, width, height, 1, GL45.GL_RGBA, GL45.GL_UNSIGNED_BYTE, textureData.getBufferArray()[i]);
+			GL45.glTexSubImage3D(GL45.GL_TEXTURE_2D_ARRAY, 0, 0, 0, i, width, height, 1, GL45.GL_RGBA,
+					GL45.GL_UNSIGNED_BYTE, textureData.getBufferArray()[i]);
 		}
 
 		loadBuilderData(GL45.GL_TEXTURE_2D_ARRAY, builder);
@@ -120,7 +124,8 @@ public class TextureUtils {
 			GL11.glTexParameteri(type, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
 			if (builder.isAnisotropic() && GL.getCapabilities().GL_EXT_texture_filter_anisotropic) {
 				GL11.glTexParameterf(type, GL14.GL_TEXTURE_LOD_BIAS, 0);
-				GL11.glTexParameterf(type, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, 4.0f);
+				GL11.glTexParameterf(type, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT,
+						4.0f);
 			}
 		} else if (builder.isNearest()) {
 			GL11.glTexParameteri(type, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);

@@ -19,14 +19,14 @@ public class SkyShader extends ShaderProgram {
 	protected void bindAttributes() {
 		super.bindAttribute(0, "positions");
 	}
-	
+
 	@Override
 	protected void getAllUniformLocations() {
 		location_skyColor = super.getUniformLocation("skyColor");
-		
+
 		super.getUniformBufferLocation("CameraData", 0);
 	}
-	
+
 	public void loadSkyColor(Vector3f skyColor) {
 		super.loadVector(location_skyColor, skyColor);
 	}

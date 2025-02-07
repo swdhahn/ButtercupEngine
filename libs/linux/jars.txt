@@ -1,0 +1,6 @@
+lwjgl-assimp-natives-linux.jar
+lwjgl-glfw-natives-linux.jar
+lwjgl-natives-linux.jar
+lwjgl-openal-natives-linux.jar
+lwjgl-opengl-natives-linux.jar
+lwjgl-stb-natives-linux.jar
