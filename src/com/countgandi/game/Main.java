@@ -24,7 +24,7 @@ import com.countgandi.engine.renderers.MainRenderer;
 
 public class Main {
 
-	public static final int WIDTH = 1280, HEIGHT = 720;
+	// public static final int WIDTH = 1280, HEIGHT = 720;
 
 	// This loader is for things that are needed all game long
 	public static Loader LOADER = new Loader();
@@ -44,7 +44,7 @@ public class Main {
 	public static boolean polygonLine = false, cursorDisabled = false;
 
 	public Main() {
-		window = new Display(WIDTH, HEIGHT, "Buttercup");
+		window = new Display(1280, 720, "Buttercup");
 		window.turnOffVysync();
 
 		camera = new Camera(window);
@@ -53,31 +53,36 @@ public class Main {
 
 		renderer = new MainRenderer(window, camera);
 
-		lMaterial = new LandscapeMaterial(Texture.create().normalMipMap().anisotropic().create("/Wall_CobblestoneMixed_albedo.png"));
+		lMaterial = new LandscapeMaterial(Texture.create().normalMipMap().anisotropic()
+				.create("/Wall_CobblestoneMixed_albedo.png"));
 		lMaterial.setHeightMap(Texture.create().normalMipMap().anisotropic().create("/heightmap.png"));
 
 		lights.add(new Light(new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(1, 1, 1), Light.LIGHT_DIRECTIONAL));
 
-		for (int i = 0; i < 20; i++) {
-			for (int j = 0; j < 10; j++) {
-				Light l = new Light(new Vector3f(-i * 10, 1.0f, j * 10), new Vector3f((float) Math.random(), (float) Math.random(), (float) Math.random()), Light.LIGHT_LAMP);
-				lights.add(l);
-			}
+		for (int j = 0; j < 5; j++) {
+			Light l = new Light(new Vector3f(25 + -j * 10, 1.0f, j * 10),
+					new Vector3f((float) Math.random(), (float) Math.random(),
+							(float) Math.random()),
+					Light.LIGHT_LAMP);
+			lights.add(l);
 		}
 
-		GLFW.glfwSetKeyCallback(window.getWindow(), GLFWKeyCallback.create((window, key, scancode, action, mods) -> {
-			if (key == GLFW.GLFW_KEY_G && action == GLFW.GLFW_PRESS) {
-				MainRenderer.WIREFRAME_MODE = !MainRenderer.WIREFRAME_MODE;
-			}
-			if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_PRESS) {
-				if (cursorDisabled) {
-					GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
-				} else {
-					GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
-				}
-				cursorDisabled = !cursorDisabled;
-			}
-		}));
+		GLFW.glfwSetKeyCallback(window.getWindow(),
+				GLFWKeyCallback.create((window, key, scancode, action, mods) -> {
+					if (key == GLFW.GLFW_KEY_G && action == GLFW.GLFW_PRESS) {
+						MainRenderer.WIREFRAME_MODE = !MainRenderer.WIREFRAME_MODE;
+					}
+					if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_PRESS) {
+						if (cursorDisabled) {
+							GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR,
+									GLFW.GLFW_CURSOR_NORMAL);
+						} else {
+							GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR,
+									GLFW.GLFW_CURSOR_DISABLED);
+						}
+						cursorDisabled = !cursorDisabled;
+					}
+				}));
 
 		Model m = OBJLoader.loadObjModelWithMaterials("pirateShip", LOADER);
 
@@ -94,10 +99,6 @@ public class Main {
 		worldManager.addEntity(e);
 		// }//}
 		terrain = new Terrain(lMaterial, LOADER);
-
-		int[] arr = new int[1];
-		GL45.glGetIntegerv(GL45.GL_MAX_UNIFORM_BLOCK_SIZE, arr);
-		System.out.println(arr[0]);
 
 		run();
 	}

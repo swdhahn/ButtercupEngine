@@ -24,7 +24,7 @@ public class Camera {
 	protected Vector3f position = new Vector3f(0, 0, 0), rotation = new Vector3f(0, 0, 0);
 
 	protected Vector3f velocity = new Vector3f();
-	
+
 	private Display window;
 
 	public Camera(Display display) {
@@ -34,7 +34,7 @@ public class Camera {
 		perspectiveMatrix = projectionMatrix;
 		viewMatrix = new Matrix4f();
 		perspectiveViewMatrix = new Matrix4f();
-		
+
 		Main.cursorDisabled = true;
 		GLFW.glfwSetInputMode(window.getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
 		GLFW.glfwSetCursorPos(window.getWindow(), 0, 0);
@@ -62,7 +62,7 @@ public class Camera {
 		} else {
 			this.velocity.x = 0;
 		}
-		
+
 		if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT) == GLFW.GLFW_PRESS) {
 			this.velocity.y = -runSpeed;
 		} else if (GLFW.glfwGetKey(window.getWindow(), GLFW.GLFW_KEY_SPACE) == GLFW.GLFW_PRESS) {
@@ -70,26 +70,28 @@ public class Camera {
 		} else {
 			velocity.y = 0;
 		}
-		
+
 		double[] mousex = new double[1], mousey = new double[1];
 		GLFW.glfwGetCursorPos(window.getWindow(), mousex, mousey);
 		double mx = mousex[0], my = mousey[0];
-		if(Main.cursorDisabled) {
-			/*if (Mouse.getX() >= Main.WIDTH - 20) {
-				Mouse.setCursorPosition(30, Mouse.getY());
-				preX = Mouse.getX();
-			}
-			if (Mouse.getX() <= 20) {
-				Mouse.setCursorPosition(Main.WIDTH - 30, Mouse.getY());
-				preX = Mouse.getX();
-			}*/
-			
-			rotation.x = Maths.clamp(rotation.x, 2 * Math.PI,  2 * Math.PI + 1);
-			
+		if (Main.cursorDisabled) {
+			/*
+			 * if (Mouse.getX() >= Main.WIDTH - 20) {
+			 * Mouse.setCursorPosition(30, Mouse.getY());
+			 * preX = Mouse.getX();
+			 * }
+			 * if (Mouse.getX() <= 20) {
+			 * Mouse.setCursorPosition(Main.WIDTH - 30, Mouse.getY());
+			 * preX = Mouse.getX();
+			 * }
+			 */
+
 			rotation.x += my * 0.01f * mouseSpeed;
-			GLFW.glfwSetCursorPos(window.getWindow(), 0, 0);
-			
 			rotation.y += mx * 0.01f * mouseSpeed;
+
+			rotation.x = Maths.clamp(rotation.x, 2 * Math.PI - 1, 2 * Math.PI + 1.5);
+
+			GLFW.glfwSetCursorPos(window.getWindow(), 0, 0);
 		}
 
 		float dx = (float) ((velocity.z * Display.getDelta()) * Math.sin(-rotation.y));
@@ -102,8 +104,8 @@ public class Camera {
 		position.z += dz + dz2;
 		position.y += velocity.y * Display.getDelta();
 
-		//upwardsSpeed += Constants.GRAVITY * DisplayManager.getFrameTimeSeconds();
-		//position.y += upwardsSpeed * DisplayManager.getFrameTimeSeconds();
+		// upwardsSpeed += Constants.GRAVITY * DisplayManager.getFrameTimeSeconds();
+		// position.y += upwardsSpeed * DisplayManager.getFrameTimeSeconds();
 	}
 
 	public Vector3f getPosition() {
@@ -121,10 +123,10 @@ public class Camera {
 		Matrix4f.rotate(rotation.z, new Vector3f(0, 0, 1), viewMatrix, viewMatrix);
 		Vector3f negativeCameraPos = new Vector3f(-position.x, -position.y, -position.z);
 		Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
-		
+
 		Matrix4f.mul(perspectiveMatrix, viewMatrix, perspectiveViewMatrix);
 	}
-	
+
 	public void updateProjectionMatrix() {
 		perspectiveMatrix = Maths.createProjectionMatrix(NEAR_PLANE, FAR_PLANE, FOV, window);
 		orthographicMatrix = Maths.createOrthographicMatrix(NEAR_PLANE, FAR_PLANE, window);
@@ -137,7 +139,7 @@ public class Camera {
 	public Matrix4f getProjectionMatrix() {
 		return this.projectionMatrix;
 	}
-	
+
 	public Matrix4f getPerspectiveMatrix() {
 		return this.perspectiveMatrix;
 	}
@@ -145,9 +147,9 @@ public class Camera {
 	public Matrix4f getOrthographicMatrix() {
 		return this.orthographicMatrix;
 	}
-	
+
 	public Matrix4f getPerspectiveViewMatrix() {
 		return this.perspectiveViewMatrix;
 	}
-	
+
 }

@@ -86,14 +86,16 @@ public abstract class FrameBuffer {
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, buffersForDrawing[index], GL11.GL_TEXTURE_2D, textures[index],
+		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, buffersForDrawing[index], GL11.GL_TEXTURE_2D,
+				textures[index],
 				0);
 	}
 
 	private void createMultisampleColorAttachment(int index, int[] textureTypes, int samples) {
 		GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, textures[index]);
 
-		GL30.glRenderbufferStorageMultisample(GL30.GL_RENDERBUFFER, samples, textureTypes[index], width, height);
+		GL30.glRenderbufferStorageMultisample(GL30.GL_RENDERBUFFER, samples, textureTypes[index], width,
+				height);
 
 		GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, buffersForDrawing[index], GL30.GL_RENDERBUFFER,
 				textures[index]);
@@ -105,10 +107,12 @@ public abstract class FrameBuffer {
 		if (!multisample) {
 			GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL30.GL_DEPTH24_STENCIL8, width, height);
 		} else {
-			GL30.glRenderbufferStorageMultisample(GL30.GL_RENDERBUFFER, samples, GL30.GL_DEPTH24_STENCIL8, width,
+			GL30.glRenderbufferStorageMultisample(GL30.GL_RENDERBUFFER, samples, GL30.GL_DEPTH24_STENCIL8,
+					width,
 					height);
 		}
-		GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_STENCIL_ATTACHMENT, GL30.GL_RENDERBUFFER,
+		GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_STENCIL_ATTACHMENT,
+				GL30.GL_RENDERBUFFER,
 				rbo);
 		GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, 0);
 	}
@@ -122,7 +126,8 @@ public abstract class FrameBuffer {
 			GL45.glBlitFramebuffer(0, 0, width, height, 0, 0, frameBufferToBeDrawnTo.width,
 					frameBufferToBeDrawnTo.height, GL45.GL_COLOR_BUFFER_BIT, GL11.GL_NEAREST);
 		}
-		GL45.glBlitFramebuffer(0, 0, width, height, 0, 0, frameBufferToBeDrawnTo.width, frameBufferToBeDrawnTo.height,
+		GL45.glBlitFramebuffer(0, 0, width, height, 0, 0, frameBufferToBeDrawnTo.width,
+				frameBufferToBeDrawnTo.height,
 				GL45.GL_DEPTH_BUFFER_BIT, GL11.GL_NEAREST);
 	}
 
@@ -143,7 +148,7 @@ public abstract class FrameBuffer {
 
 	public static void unbind() {
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
-		GL11.glViewport(0, 0, Main.WIDTH, Main.HEIGHT);
+		GL11.glViewport(0, 0, (int) Display.DISPLAY.getWidth(), (int) Display.DISPLAY.getHeight());
 	}
 
 	public void render(FrameBuffer previousBuffer) {
